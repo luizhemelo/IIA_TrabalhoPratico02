@@ -12,25 +12,21 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <cstdlib>
-#include <fstream>
 #include <random>
 #include <vector>
 #include <ctime>
-
 
 #define EMPTY -1     // Recompensa para espacos vazios ou sem perigos
 #define INVALID -10  // Recompensa para paredes ou localizacoes fora do mapa - TERMINAL
 #define LOCATION 1   // Recompensa para pontos de localizacao
 #define COLLECT 10   // Recompensa para pontos de coleta - TERMINAL
 
-
 // Armazenara os Q-Values para os movimentos possiveis em cada posicao da Q-Table
 struct q_values {
     double r, l, u, d;  // Right / Left / Up / Down
     std::pair<int,int> pos;  // Armazena a posicao destes Q-Values no mapa do AGV
+    std::vector<char> opt;  // Armazena os valores da politica otima aprendida para cada estado
 };
-
 
 class AGV {
     private:  // Variaveis utilizadas pelo algoritmo
@@ -53,10 +49,12 @@ class AGV {
     public:  // Funcoes utilizadas pelo algoritmo
         AGV (double _alpha, double _epsilon, double _lambda, int _N);
 
-        void printPi (char mov);
+        void printPi ();
 
         double maxQ (std::pair<int,int> pos);
+        char maxMov (std::pair<int,int> pos);
         void updateQTable (int action, int reward, double _Q, double Q);
+        void updateOpt ();
         int rewardFunction (std::pair<int,int> pos);
 
         bool moveAgent (int action);
@@ -65,6 +63,5 @@ class AGV {
 
         void qLearning ();
 };
-
 
 #endif
